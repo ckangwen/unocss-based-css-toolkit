@@ -1,0 +1,13 @@
+.cache
+.DS_Store
+.idea
+.nuxt
+.output
+.temp
+*.local
+*.log
+*.vsix
+.vscode
+node_modules
+dist
+!packages/docs/public/assets/dist
