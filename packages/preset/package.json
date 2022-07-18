@@ -1,0 +1,20 @@
+{
+  "name": "my-unocss-preset-ui",
+  "version": "0.0.1",
+  "description": "Lightweight CSS Framework by UnoCss",
+  "keywords": [
+    "unocss",
+    "unocss-preset",
+    "css-framework"
+  ],
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@unocss/core": "^0.44.3"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  }
+}
