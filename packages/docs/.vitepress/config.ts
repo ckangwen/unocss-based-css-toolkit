@@ -1,4 +1,6 @@
 import { defineConfig } from 'vitepress'
+import Unocss from '@unocss/vite'
+import MyUnoUi from 'my-unocss-preset-ui'
 import sidebar from './config/sidebar'
 import { mdPlugin } from './config/plugin'
 
@@ -15,5 +17,14 @@ export default defineConfig({
   },
   markdown: {
     config: md => mdPlugin(md),
+  },
+  vite: {
+    plugins: [
+      Unocss({
+        presets: [
+          MyUnoUi(),
+        ],
+      }),
+    ],
   },
 })

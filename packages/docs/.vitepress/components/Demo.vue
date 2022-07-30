@@ -39,6 +39,10 @@ const decodedDescription = computed(() =>
   decodeURIComponent(props.description!),
 )
 
+const decodedCode = computed(() =>
+  decodeURIComponent(props.source!),
+)
+
 const copyCode = async () => {
   try {
     await copy()
@@ -55,7 +59,7 @@ const copyCode = async () => {
     <p v-if="decodedDescription" text="sm" v-html="decodedDescription" />
     <div class="example">
       <div class="example-showcase">
-        <div v-html="source" />
+        <div v-html="decodedCode" />
       </div>
       <el-divider />
       <div class="op-btn-group">

@@ -3,20 +3,21 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "dev": "vitepress dev",
     "build": "vitepress build docs",
+    "dev": "vitepress dev",
     "serve": "vitepress serve docs"
+  },
+  "dependencies": {
+    "element-plus": "^2.2.8",
+    "shiki": "^0.10.1"
   },
   "devDependencies": {
     "@types/markdown-it": "^12.2.3",
     "@types/markdown-it-container": "^2.0.5",
     "markdown-it": "^13.0.1",
     "markdown-it-container": "^3.0.0",
+    "my-unocss-preset-ui": "workspace:*",
     "sass": "^1.53.0",
     "vitepress": "^1.0.0-alpha.4"
-  },
-  "dependencies": {
-    "element-plus": "^2.2.8",
-    "shiki": "^0.10.1"
   }
 }

@@ -31,7 +31,7 @@ export const mdPlugin = (md: MarkdownIt) => {
         const sourceFileToken = tokens[idx + 1]
         const exampleCode = sourceFileToken.content ?? ''
 
-        return `<Demo source="${exampleCode}" description="${encodeURIComponent(
+        return `<Demo source="${encodeURIComponent(exampleCode)}" description="${encodeURIComponent(
           localMd.render(description),
         )}">`
       }

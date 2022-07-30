@@ -7,6 +7,7 @@ import {
 } from 'element-plus'
 import Demo from '../components/Demo.vue'
 import 'element-plus/dist/index.css'
+import 'uno.css'
 
 const themeConfig: Theme = {
   ...DefaultTheme,
