@@ -20,7 +20,7 @@ export default defineConfig({
       cdn: "https://esm.sh/",
     }),
   ],
-});`;
+});`
 
 export const defaultHTML = `
 <div h-full text-center flex select-none all:transition-400>
@@ -45,6 +45,6 @@ export const defaultHTML = `
 <div absolute bottom-5 right-0 left-0 text-center op30 fw300>
   on-demand · instant · fully customizable
 </div>
-`.trim();
+`.trim()
 
-export const defaultOptions = "{}";
+export const defaultOptions = '{}'

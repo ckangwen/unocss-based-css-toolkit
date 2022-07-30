@@ -1,14 +1,14 @@
 <script setup lang="ts">
 // @ts-expect-error missing types
-import { Pane, Splitpanes } from "splitpanes";
-import { computed, onMounted, ref, watch } from "vue";
-import { useElementSize, useLocalStorage } from "@vueuse/core";
+import { Pane, Splitpanes } from 'splitpanes'
+import { computed, onMounted, ref, watch } from 'vue'
+import { useElementSize, useLocalStorage } from '@vueuse/core'
 import {
   useCSSPrettify,
   useHTMLPrettify,
   useJSPrettify,
-} from "../utils/prettier";
-import { isDark } from "../logics/dark";
+} from '../utils/prettier'
+import { isDark } from '../logics/dark'
 import {
   customConfigError,
   customConfigRaw,
@@ -17,99 +17,99 @@ import {
   output,
   showPreflights,
   transformedHTML,
-} from "../logics/uno";
-import { defaultConfigRaw, defaultHTML } from "../defaults";
-import { options } from "../logics/url";
+} from '../logics/uno'
+import { defaultConfigRaw, defaultHTML } from '../defaults'
+import { options } from '../logics/url'
 
-const panel = ref();
-const loading = ref(true);
-const TITLE_HEIGHT = 30;
-const { height: vh } = useElementSize(panel);
-const titleHeightPercent = computed(() => (TITLE_HEIGHT / vh.value) * 100);
+const panel = ref()
+const loading = ref(true)
+const TITLE_HEIGHT = 30
+const { height: vh } = useElementSize(panel)
+const titleHeightPercent = computed(() => (TITLE_HEIGHT / vh.value) * 100)
 
 const getInitialPanelSizes = (percent: number): number[] => {
-  return [100 - percent * 2, percent, percent];
-};
+  return [100 - percent * 2, percent, percent]
+}
 
-if (!inputHTML.value) {
-  inputHTML.value = defaultHTML;
-}
-if (!customConfigRaw.value) {
-  customConfigRaw.value = defaultConfigRaw;
-}
+if (!inputHTML.value)
+  inputHTML.value = defaultHTML
+
+if (!customConfigRaw.value)
+  customConfigRaw.value = defaultConfigRaw
 
 const panelSizes = useLocalStorage<number[]>(
-  "unocss-panel-sizes",
+  'unocss-panel-sizes',
   getInitialPanelSizes(titleHeightPercent.value),
-  { listenToStorageChanges: false }
-);
+  { listenToStorageChanges: false },
+)
 
 function handleResize(event: { size: number }[]) {
-  panelSizes.value = event.map(({ size }) => size);
+  panelSizes.value = event.map(({ size }) => size)
 }
 function isCollapsed(index: number) {
-  return panelSizes.value[index] <= titleHeightPercent.value + 3;
+  return panelSizes.value[index] <= titleHeightPercent.value + 3
 }
 function togglePanel(index: number) {
   if (isCollapsed(index))
-    panelSizes.value[index] = 100 / panelSizes.value.length;
-  else panelSizes.value[index] = titleHeightPercent.value;
+    panelSizes.value[index] = 100 / panelSizes.value.length
+  else panelSizes.value[index] = titleHeightPercent.value
 
-  normalizePanels();
+  normalizePanels()
 }
 function normalizePanels() {
-  const ignoredIndex: number[] = [];
-  let originalSum = 0;
-  let ignoredSum = 0;
+  const ignoredIndex: number[] = []
+  let originalSum = 0
+  let ignoredSum = 0
 
   panelSizes.value.forEach((v, idx) => {
     if (v <= titleHeightPercent.value) {
-      ignoredIndex.push(idx);
-      ignoredSum += v;
-    } else {
-      originalSum += v;
+      ignoredIndex.push(idx)
+      ignoredSum += v
     }
-  });
+    else {
+      originalSum += v
+    }
+  })
 
-  const resize = (100 - ignoredSum) / originalSum;
+  const resize = (100 - ignoredSum) / originalSum
 
   panelSizes.value.forEach((v, idx) => {
-    if (ignoredIndex.includes(idx)) {
-      return;
-    }
-    panelSizes.value[idx] *= resize;
-  });
+    if (ignoredIndex.includes(idx))
+      return
+
+    panelSizes.value[idx] *= resize
+  })
 }
 
 const formatHTML = () => {
   inputHTML.value = useHTMLPrettify(
-    options.value.transform ? transformedHTML : inputHTML
-  ).value;
-};
+    options.value.transform ? transformedHTML : inputHTML,
+  ).value
+}
 const formatConfig = () => {
-  customConfigRaw.value = useJSPrettify(customConfigRaw).value;
-};
-const isCSSPrettify = ref(false);
+  customConfigRaw.value = useJSPrettify(customConfigRaw).value
+}
+const isCSSPrettify = ref(false)
 const cssFormatted = useCSSPrettify(
   computed(() =>
     output.value?.getLayers(
       undefined,
-      showPreflights.value ? undefined : ["preflights"]
-    )
+      showPreflights.value ? undefined : ['preflights'],
+    ),
   ),
-  isCSSPrettify
-);
+  isCSSPrettify,
+)
 
 watch(titleHeightPercent, (value: number) => {
-  panelSizes.value = getInitialPanelSizes(value);
-});
+  panelSizes.value = getInitialPanelSizes(value)
+})
 
 onMounted(() => {
   // prevent init transition
   setTimeout(() => {
-    loading.value = false;
-  }, 200);
-});
+    loading.value = false
+  }, 200)
+})
 </script>
 
 <template>
@@ -133,8 +133,14 @@ onMounted(() => {
           h-36px
           w-full
         >
-          <div flex items-center gap-2>
-            <div text-sm>UnoCSS Playground</div>
+          <div
+            flex
+            items-center
+            gap-2
+          >
+            <div text-sm>
+              UnoCSS Playground
+            </div>
           </div>
 
           <div
@@ -169,7 +175,12 @@ onMounted(() => {
             />
           </div>
         </div>
-        <TitleBar title="HTML" w-full relative @title-click="togglePanel(0)">
+        <TitleBar
+          title="HTML"
+          w-full
+          relative
+          @title-click="togglePanel(0)"
+        >
           <template #before>
             <div
               class="flex-shrink-0 i-ri-arrow-right-s-line mr-1 transition-transform transform"
@@ -188,10 +199,18 @@ onMounted(() => {
             un-children="inline-flex items-center cursor-pointer gap-1"
           >
             <label>
-              <input v-model="options.transform" type="checkbox" />
+              <input
+                v-model="options.transform"
+                type="checkbox"
+              >
               <span text-sm>Transform</span>
             </label>
-            <div w-1px h-28px my--1 bg-gray:20 />
+            <div
+              w-1px
+              h-28px
+              my--1
+              bg-gray:20
+            />
             <button
               i-ri-mist-line
               icon-btn
@@ -220,7 +239,10 @@ onMounted(() => {
       min-h-28px
       relative
     >
-      <TitleBar title="Config" @title-click="togglePanel(1)">
+      <TitleBar
+        title="Config"
+        @title-click="togglePanel(1)"
+      >
         <template #before>
           <div
             class="flex-shrink-0 i-ri-arrow-right-s-line mr-1 transition-transform transform"
@@ -239,7 +261,12 @@ onMounted(() => {
           :class="isCollapsed(1) ? 'op0' : ''"
           un-children="inline-flex items-center cursor-pointer gap1"
         >
-          <div w-1px h-28px my--1 bg-gray:20 />
+          <div
+            w-1px
+            h-28px
+            my--1
+            bg-gray:20
+          />
           <button
             i-ri-mist-line
             icon-btn
@@ -275,7 +302,10 @@ onMounted(() => {
       flex-col
       min-h-28px
     >
-      <TitleBar title="Output CSS" @title-click="togglePanel(2)">
+      <TitleBar
+        title="Output CSS"
+        @title-click="togglePanel(2)"
+      >
         <template #before>
           <div
             class="flex-shrink-0 i-ri-arrow-right-s-line mr-1 transition-transform transform"
@@ -294,11 +324,17 @@ onMounted(() => {
           un-children="inline-flex items-center cursor-pointer gap1"
         >
           <label>
-            <input v-model="showPreflights" type="checkbox" />
+            <input
+              v-model="showPreflights"
+              type="checkbox"
+            >
             <span text-sm>Preflights</span>
           </label>
           <label>
-            <input v-model="isCSSPrettify" type="checkbox" />
+            <input
+              v-model="isCSSPrettify"
+              type="checkbox"
+            >
             <span text-sm>Prettify</span>
           </label>
         </div>

@@ -1,87 +1,88 @@
 <script setup lang="ts">
-import { isDark } from "../logics/dark";
-import { useResize } from "../composables/useResize";
-import { init, output, transformedHTML } from "../logics/uno";
-import { options } from "../logics/url";
+import { isDark } from '../logics/dark'
+import { useResize } from '../composables/useResize'
+import { init, output, transformedHTML } from '../logics/uno'
+import { options } from '../logics/url'
 
-const iframe = ref<HTMLIFrameElement>();
+const iframe = ref<HTMLIFrameElement>()
 
 const iframeData = reactive({
-  source: "unocss-playground",
-  css: computed(() => output.value?.css || ""),
+  source: 'unocss-playground',
+  css: computed(() => output.value?.css || ''),
   html: transformedHTML,
   dark: isDark,
-});
+})
 
 async function send() {
   iframe.value?.contentWindow?.postMessage(
     JSON.stringify(iframeData),
-    location.origin
-  );
+    location.origin,
+  )
 }
 
-watch([iframeData, iframe], send, { deep: true });
+watch([iframeData, iframe], send, { deep: true })
 
-const canvasRef = ref();
-const frameRef = ref();
-const scale = ref(1);
+const canvasRef = ref()
+const frameRef = ref()
+const scale = ref(1)
 const { width, height, isResizing, style, onResizeEnd } = useResize(frameRef, {
   borderRadius: 8,
   xMultiplier: computed(() => 2 / scale.value),
   yMultiplier: computed(() => 1 / scale.value),
   minWidth: 270,
   minHeight: 300,
-  mode: "manual",
+  mode: 'manual',
   edgeWidth: computed(() => (options.value.responsive ? [0, 16] : [0, 0])),
-});
+})
 
-const size = useElementSize(canvasRef);
+const size = useElementSize(canvasRef)
 const {
   width: frameWidth,
   height: frameHeight,
   update,
-} = useElementBounding(frameRef);
+} = useElementBounding(frameRef)
 
 watch([size.width, size.height, width, height], () => {
   const scaleSize = Math.min(
     size.width.value / width.value,
-    size.height.value / height.value
-  );
-  scale.value = scaleSize > 1 ? 1 : scaleSize;
+    size.height.value / height.value,
+  )
+  scale.value = scaleSize > 1 ? 1 : scaleSize
 
-  setTimeout(() => update(), 0);
-});
-const isResponsive = computed(() => options.value.responsive);
+  setTimeout(() => update(), 0)
+})
+const isResponsive = computed(() => options.value.responsive)
 onMounted(() => {
   setTimeout(() => {
     if (isResponsive.value && options.value.width && options.value.height) {
-      width.value = options.value.width;
-      height.value = options.value.height;
+      width.value = options.value.width
+      height.value = options.value.height
     }
-    update();
-  }, 0);
-});
-let resized = false;
+    update()
+  }, 0)
+})
+let resized = false
 onResizeEnd(() => {
   if (isResponsive.value) {
-    resized = true;
-    options.value.width = width.value;
-    options.value.height = height.value;
+    resized = true
+    options.value.width = width.value
+    options.value.height = height.value
   }
-});
+})
 watch(isResponsive, (responsive) => {
   if (!responsive) {
-    delete options.value.width;
-    delete options.value.height;
-  } else {
-    if (!resized) {
-      width.value = 375;
-      height.value = 706;
-    }
-    options.value.width = width.value;
-    options.value.height = height.value;
+    delete options.value.width
+    delete options.value.height
   }
-});
+  else {
+    if (!resized) {
+      width.value = 375
+      height.value = 706
+    }
+    options.value.width = width.value
+    options.value.height = height.value
+  }
+})
 </script>
 
 <template>
@@ -107,17 +108,32 @@ watch(isResponsive, (responsive) => {
       <div
         class="absolute -ml-4 h-full w-4 flex items-center justify-center bg-light-700 dark:bg-dark-800"
       >
-        <span w-4 h-4 i-la-grip-lines-vertical text-gray-400 />
+        <span
+          w-4
+          h-4
+          i-la-grip-lines-vertical
+          text-gray-400
+        />
       </div>
       <div
         class="absolute right-0 -mr-4 h-full w-4 flex items-center justify-center bg-light-700 dark:bg-dark-800"
       >
-        <span w-4 h-4 i-la-grip-lines-vertical text-gray-400 />
+        <span
+          w-4
+          h-4
+          i-la-grip-lines-vertical
+          text-gray-400
+        />
       </div>
       <div
         class="absolute bottom-0 -mb-4 h-4 w-full flex items-center justify-center bg-light-700 dark:bg-dark-800"
       >
-        <span w-4 h-4 i-la-grip-lines text-gray-400 />
+        <span
+          w-4
+          h-4
+          i-la-grip-lines
+          text-gray-400
+        />
       </div>
       <div
         class="absolute right-0 bottom-0 -mr-4 -mb-4 h-4 w-4 flex items-center justify-center bg-light-700 dark:bg-dark-800"
@@ -190,7 +206,7 @@ watch(isResponsive, (responsive) => {
           w-full
           h-full
           min-h-0
-          :class="{ dark: isDark, 'pointer-events-none': isResizing }"
+          :class="{ 'dark': isDark, 'pointer-events-none': isResizing }"
           src="./__play.html"
           @load="send"
         />

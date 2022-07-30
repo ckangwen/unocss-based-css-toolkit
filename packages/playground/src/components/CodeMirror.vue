@@ -3,52 +3,52 @@ import type {
   AsyncHintFunction,
   HintFunction,
   HintFunctionResolver,
-} from "codemirror";
-import { getMatchedPositions } from "../utils/getMatchedPositions";
-import { useCodeMirror } from "../composables/useCodeMirror";
+} from 'codemirror'
+import { getMatchedPositions } from '../utils/getMatchedPositions'
+import { useCodeMirror } from '../composables/useCodeMirror'
 
 const props = defineProps<{
-  modelValue: string;
-  mode?: string;
-  readOnly?: boolean;
-  matched?: Set<string> | string[];
-  getHint?: HintFunction | AsyncHintFunction | HintFunctionResolver;
-}>();
+  modelValue: string
+  mode?: string
+  readOnly?: boolean
+  matched?: Set<string> | string[]
+  getHint?: HintFunction | AsyncHintFunction | HintFunctionResolver
+}>()
 
-const emit = defineEmits<{ (e: "update:modelValue", payload: string): void }>();
+const emit = defineEmits<{ (e: 'update:modelValue', payload: string): void }>()
 const modeMap: Record<string, any> = {
-  html: "htmlmixed",
-  vue: "htmlmixed",
-  svelte: "htmlmixed",
-  js: "javascript",
-  mjs: "javascript",
-  cjs: "javascript",
-  ts: { name: "javascript", typescript: true },
-  mts: { name: "javascript", typescript: true },
-  cts: { name: "javascript", typescript: true },
-  jsx: { name: "javascript", jsx: true },
-  tsx: { name: "javascript", typescript: true, jsx: true },
-};
+  html: 'htmlmixed',
+  vue: 'htmlmixed',
+  svelte: 'htmlmixed',
+  js: 'javascript',
+  mjs: 'javascript',
+  cjs: 'javascript',
+  ts: { name: 'javascript', typescript: true },
+  mts: { name: 'javascript', typescript: true },
+  cts: { name: 'javascript', typescript: true },
+  jsx: { name: 'javascript', jsx: true },
+  tsx: { name: 'javascript', typescript: true, jsx: true },
+}
 
-const el = ref<HTMLTextAreaElement>();
-const input = useVModel(props, "modelValue", emit, { passive: true });
+const el = ref<HTMLTextAreaElement>()
+const input = useVModel(props, 'modelValue', emit, { passive: true })
 
-const mode = computed(() => modeMap[props.mode || ""] || props.mode);
+const mode = computed(() => modeMap[props.mode || ''] || props.mode)
 const extraKeys = computed(
   () =>
     (props.getHint
       ? {
-          "Ctrl-Space": "autocomplete",
-          "Ctrl-.": "autocomplete",
-          "Cmd-Space": "autocomplete",
-          "Cmd-.": "autocomplete",
-          Tab: "autocomplete",
+          'Ctrl-Space': 'autocomplete',
+          'Ctrl-.': 'autocomplete',
+          'Cmd-Space': 'autocomplete',
+          'Cmd-.': 'autocomplete',
+          'Tab': 'autocomplete',
         }
-      : {}) as CodeMirror.KeyMap
-);
+      : {}) as CodeMirror.KeyMap,
+)
 const hintOptions = computed(() =>
-  props.getHint ? { hint: props.getHint } : {}
-);
+  props.getHint ? { hint: props.getHint } : {},
+)
 
 onMounted(async () => {
   const cm = useCodeMirror(
@@ -59,54 +59,56 @@ onMounted(async () => {
       mode,
       hintOptions,
       extraKeys,
-    })
-  );
-  cm.setSize("100%", "100%");
+    }),
+  )
+  cm.setSize('100%', '100%')
 
   if (props.getHint) {
-    cm.on("keyup", (editor, event) => {
-      if (event.key.match(/^[\w:-]$/)) {
-        editor.execCommand("autocomplete");
-      }
-    });
+    cm.on('keyup', (editor, event) => {
+      if (event.key.match(/^[\w:-]$/))
+        editor.execCommand('autocomplete')
+    })
   }
 
-  setTimeout(() => cm.refresh(), 100);
-  const decorations: CodeMirror.TextMarker<CodeMirror.MarkerRange>[] = [];
+  setTimeout(() => cm.refresh(), 100)
+  const decorations: CodeMirror.TextMarker<CodeMirror.MarkerRange>[] = []
 
   function mark(start: number, end: number) {
     decorations.push(
       cm.markText(cm.posFromIndex(start), cm.posFromIndex(end), {
-        className: "highlighted",
-      })
-    );
+        className: 'highlighted',
+      }),
+    )
   }
 
   function highlight() {
     // clear previous
-    decorations.forEach((i) => i.clear());
+    decorations.forEach(i => i.clear())
     getMatchedPositions(
       props.modelValue,
-      Array.from(props.matched || [])
-    ).forEach((i) => mark(i[0], i[1]));
+      Array.from(props.matched || []),
+    ).forEach(i => mark(i[0], i[1]))
   }
 
-  let timer: any = 0;
+  let timer: any = 0
   watch(
     () => [props.modelValue, props.matched],
     async () => {
-      clearTimeout(timer);
-      if (props.matched) {
-        timer = setTimeout(highlight, 200);
-      }
+      clearTimeout(timer)
+      if (props.matched)
+        timer = setTimeout(highlight, 200)
     },
-    { immediate: true }
-  );
-});
+    { immediate: true },
+  )
+})
 </script>
 
 <template>
-  <div relative font-mono text-sm>
+  <div
+    relative
+    font-mono
+    text-sm
+  >
     <textarea ref="el" />
   </div>
 </template>

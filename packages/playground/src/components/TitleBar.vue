@@ -1,11 +1,11 @@
 <script setup lang="ts">
 defineProps<{
-  title: string;
-}>();
+  title: string
+}>()
 
 const emit = defineEmits<{
-  (n: "titleClick", e: any): void;
-}>();
+  (n: 'titleClick', e: any): void
+}>()
 </script>
 
 <template>
@@ -20,13 +20,23 @@ const emit = defineEmits<{
     flex
     all:my-auto
   >
-    <div flex @click="(e) => emit('titleClick', e)">
+    <div
+      flex
+      @click="(e) => emit('titleClick', e)"
+    >
       <slot name="before" />
-      <div mr-2 op-60>
+      <div
+        mr-2
+        op-60
+      >
         {{ title }}
       </div>
     </div>
-    <div flex gap-2 flex-auto>
+    <div
+      flex
+      gap-2
+      flex-auto
+    >
       <slot />
     </div>
   </div>
