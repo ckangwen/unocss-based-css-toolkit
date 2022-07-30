@@ -36,6 +36,7 @@
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-typescript": "^11.0.0",
     "@vueuse/core": "^8.7.5",
+    "@unocss/core": "^0.44.3",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.3.0",

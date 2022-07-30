@@ -11,9 +11,6 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "dependencies": {
-    "@unocss/core": "^0.44.3"
-  },
   "scripts": {
     "build": "rollup -c"
   }
